@@ -37,12 +37,17 @@ const createNewWorkout = (body) => {
 
 };
 
-const updateWorkout = () => {
-    return;
+const updateWorkout = (id, body) => {    
+    // Actualizando con persistenacia de datos con el workout
+    const updateWorkout = Workout.updateWorkout(id, body);
+
+    return updateWorkout ? updateWorkout : null;
 };
 
-const deleteWorkout = () => {
-    return;
+const deleteWorkout = (id) => {
+    // Eliminado workout 
+    const idWorkout = Workout.deleteWorkout(id);
+    return idWorkout;
 };
 
 module.exports = {
