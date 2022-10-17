@@ -1,5 +1,5 @@
 //Cargo mi base de datos
-const DB = require('./db.json');
+const DB = require('../databases/db.json');
 const { saveDataToDatabase } = require('../utils/utils');
 
 const allWorkoutsFromDb = () => DB.workouts;
