@@ -20,12 +20,18 @@ router
     })
     .post('/', (req , res) => {
         const body = req.body
+
+        // Validaciones de los datos que tiene el body
+        if (!body.name || !body.mode || !body.equipment || !body.exercises || !body.trainerTips) {
+            res.status(400).send({status:'FAILED', message: 'Missing fields'});
+        }
+
         const workout = workoutServices.createNewWorkout(body)
 
         if (workout) {
-            res.send(workout).status(201);
+            res.status(201).send({status: 'OK', data: workout});
         } else {
-            res.status(400).send({'msg: ': 'Workout not created'})
+            res.status(400).send({status:'FAILED', message: 'Workout not created'});
         }
     })
     .patch('/:workoutId', (req , res) => {
@@ -35,9 +41,9 @@ router
 
 
         if (workout) {
-            res.send(workout).status(202);
+            res.status(201).send({status: 'OK', data: workout});
         } else {
-            res.status(400).send({'msg: ': 'Workout not updated'})
+            res.status(400).send({status:'FAILED', message: 'Workout not updated'})
         }
     })
     .delete('/:workoutId', (req , res) => {
@@ -45,9 +51,9 @@ router
         const workout = workoutServices.deleteWorkout(workoutId);
 
         if (workout) {
-            res.send(workout).status(200);
+            res.status(201).send({status: 'OK', data: workout});
         } else {
-            res.status(400).send({'msg: ': 'Workout not deleted'})
+            res.status(400).send({status:'FAILED', message: 'Workout not deleted'})
         }
 
     });

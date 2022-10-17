@@ -9,12 +9,22 @@ const saveWorkout = (newWorkout) => {
     const isAlreadyExist = DB.workouts.find(workout => workout.id == newWorkout.id);
 
     if (isAlreadyExist) {
-        return;
+        throw {
+            status: 400,
+            message: `Workout with the id ${newWorkout.id} already exists`
+        }
     }
 
-    DB.workouts.push(newWorkout);
-    saveDataToDatabase(DB);
-    return true;
+    try {
+        DB.workouts.push(newWorkout);
+        saveDataToDatabase(DB);
+        return true;        
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error
+        }
+    }
 }
 
 const updateWorkout = (id, changes) => {
@@ -22,16 +32,28 @@ const updateWorkout = (id, changes) => {
 
     // Buscamos que exista nuestra workout en la bd
     if (posWorkout === -1) {
-        return;
+        throw {
+            status: 404,
+            message: `Workout not exists in database`
+        }
     }
 
     // Con el spred operator vamos a reemplazar los nuevos valores que nos ingresen y modificamos el update.
     const workout = { ...DB.workouts[posWorkout], ...changes, ...{updadeAt: new Date().toLocaleString('en-US', {timeZone: 'UTC'})}};
 
-    // Sobreescribimos el workour actualizado y salvamos los datos
-    DB.workouts[posWorkout] = workout
-    saveDataToDatabase(DB);
-    return workout;
+    
+    try {
+        // Sobreescribimos el workour actualizado y salvamos los datos
+        DB.workouts[posWorkout] = workout
+        saveDataToDatabase(DB);
+        return workout;
+        
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error
+        }
+    }
 }
 
 const deleteWorkout = (id) => {
@@ -39,15 +61,26 @@ const deleteWorkout = (id) => {
 
     // Buscamos que exista nuestra workout en la bd
     if (posWorkout === -1) {
-        return;
+        throw {
+            status: 404,
+            message: `Workout not exists in database`
+        }
     }
 
-    const workoutDeleted = DB.workouts[posWorkout];
-    // Eliminamos la workout seleccionada de nuestra base de datos.
-    DB.workouts.splice(posWorkout,1);
-    saveDataToDatabase(DB)
-
-    return workoutDeleted;
+    try {
+        const workoutDeleted = DB.workouts[posWorkout];
+        // Eliminamos la workout seleccionada de nuestra base de datos.
+        DB.workouts.splice(posWorkout,1);
+        saveDataToDatabase(DB)
+    
+        return workoutDeleted;
+    
+    } catch (error) {
+        throw {
+            status: 500,
+            message: error?.message || error
+        }
+    }
 }
 
 module.exports = { allWorkoutsFromDb, saveWorkout, updateWorkout, deleteWorkout };

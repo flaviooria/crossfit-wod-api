@@ -16,10 +16,7 @@ const getWorkoutById = (id) => {
 const createNewWorkout = (body) => {
     const id = crypto.randomUUID();
 
-    // Validaciones de los datos que tiene el body
-    if (!body.name || !body.mode || !body.equipment || !body.exercises || !body.trainerTips) {
-        return;
-    }
+    
     // Creando nuestro objeto workout
     const newWorkout = {
         'id': id,
