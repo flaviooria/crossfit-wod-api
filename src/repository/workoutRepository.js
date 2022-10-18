@@ -1,10 +1,31 @@
 //Cargo mi base de datos
-const DB = require('./db.json');
+const DB = require('../databases/db.json');
 const { saveDataToDatabase } = require('../utils/utils');
 
-const allWorkoutsFromDb = () => DB.workouts;
 
-// Función para escribir mi workout a la base de datos
+const getWorkouts = () => {
+    try {
+        return DB.workouts;
+    } catch (error) {
+        throw {
+            status: 500,
+            message: `Intenal Server Error`
+        }
+    }
+};
+
+const getWorkoutById = (id) => {
+    try {
+        return DB.workouts.find(workout => workout.id === id);
+    } catch (error) {
+        throw {
+            status: 404,
+            message: `Workout with the id ${newWorkout.id} not exists in bd`
+        }
+    }
+}
+
+// Función para escribir una nueva workout a la base de datos
 const saveWorkout = (newWorkout) => {
     const isAlreadyExist = DB.workouts.find(workout => workout.id == newWorkout.id);
 
@@ -34,19 +55,19 @@ const updateWorkout = (id, changes) => {
     if (posWorkout === -1) {
         throw {
             status: 404,
-            message: `Workout not exists in database`
+            message: `Workout with id: ${id} not exists in database`
         }
     }
 
     // Con el spred operator vamos a reemplazar los nuevos valores que nos ingresen y modificamos el update.
-    const workout = { ...DB.workouts[posWorkout], ...changes, ...{updadeAt: new Date().toLocaleString('en-US', {timeZone: 'UTC'})}};
+    const workoutUpdated = { ...DB.workouts[posWorkout], ...changes, ...{updadeAt: new Date().toLocaleString('en-US', {timeZone: 'UTC'})}};
 
     
     try {
-        // Sobreescribimos el workour actualizado y salvamos los datos
-        DB.workouts[posWorkout] = workout
+        // Sobreescribimos el workout actualizado y salvamos los datos
+        DB.workouts[posWorkout] = workoutUpdated
         saveDataToDatabase(DB);
-        return workout;
+        return workoutUpdated;
         
     } catch (error) {
         throw {
@@ -63,7 +84,7 @@ const deleteWorkout = (id) => {
     if (posWorkout === -1) {
         throw {
             status: 404,
-            message: `Workout not exists in database`
+            message: `Workout with id: ${id} not exists in database`
         }
     }
 
@@ -83,4 +104,4 @@ const deleteWorkout = (id) => {
     }
 }
 
-module.exports = { allWorkoutsFromDb, saveWorkout, updateWorkout, deleteWorkout };
+module.exports = { getWorkouts, getWorkoutById, saveWorkout, updateWorkout, deleteWorkout };

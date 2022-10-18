@@ -1,52 +1,67 @@
 //Nuestros servicios servirán como intermediario entre la base de datos y los controlodares que recibiran la petición del usuario.
-const Workout = require('../databases/Workout');
+const Workout = require('../repository/workoutRepository');
 const crypto = require('crypto');
-const allWorkouts = Workout.allWorkoutsFromDb();
 
 const getAllWorkouts = () => {
-    const workouts = allWorkouts;
-    return workouts;
+    try {
+        const workouts = Workout.getWorkouts();
+        return workouts;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const getWorkoutById = (id) => {
-    const workout = allWorkouts.find(element => element.id == id);
-    return workout;
+    try {
+        const workout = Workout.getWorkoutById(id);
+        return workout;
+    } catch (error) {
+        throw error;
+    }
 };
 
-const createNewWorkout = (body) => {
+const createNewWorkout = (newWorkout) => {
     const id = crypto.randomUUID();
 
-    
     // Creando nuestro objeto workout
-    const newWorkout = {
+    const workoutToInsert = {
         'id': id,
-        ...body,
+        ...newWorkout,
         createdAt: new Date().toLocaleString('en-US',{timeZone: 'UTC'}),
         updateAt: new Date().toLocaleString('en-US',{timeZone: 'UTC'})
     }
 
-    // Creando persistenacia de datos con el nuevo workout
-    if (Workout.saveWorkout(newWorkout)) {
-        return newWorkout;
+    try {
+        // Creando persistenacia de datos con el nuevo workout
+        if (Workout.saveWorkout(workoutToInsert)) {
+            return workoutToInsert;
+        }
+    } catch (error) {
+        throw error;
     }
-
-    return null;
-
 };
 
-const updateWorkout = (id, body) => {    
-    // Actualizando con persistenacia de datos con el workout
-    const updateWorkout = Workout.updateWorkout(id, body);
-
-    return updateWorkout ? updateWorkout : null;
+const updateWorkout = (id, changesWorkout) => {    
+    try {
+        // Actualizando con persistenacia de datos con el workout
+        const updateWorkout = Workout.updateWorkout(id, changesWorkout);
+    
+        return updateWorkout ? updateWorkout : null;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const deleteWorkout = (id) => {
-    // Eliminado workout 
-    const idWorkout = Workout.deleteWorkout(id);
-    return idWorkout;
+    try {
+        // Eliminado workout 
+        const idWorkout = Workout.deleteWorkout(id);
+        return idWorkout;
+    } catch (error) {
+        throw error;
+    }
 };
 
 module.exports = {
-    getWorkoutById, getAllWorkouts, createNewWorkout, updateWorkout, deleteWorkout
+    getAllWorkouts, getWorkoutById, createNewWorkout, updateWorkout, deleteWorkout
 };
