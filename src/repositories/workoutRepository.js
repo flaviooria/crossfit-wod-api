@@ -3,9 +3,40 @@ const DB = require('../databases/db.json');
 const { saveDataToDatabase } = require('../utils/utils');
 
 
-const getWorkouts = () => {
+const getWorkouts = (filterParams) => {
     try {
-        return DB.workouts;
+
+        let workouts = DB.workouts;
+
+        if (filterParams) {
+
+            const { mode, equipment, length } = filterParams;
+            if (mode) {
+                workouts = DB.workouts.filter(workout => workout.mode.toLocaleLowerCase().includes(mode));
+
+            }
+
+            if (equipment) {
+                workouts = DB.workouts.map((workout) => {
+                    const workoutsFiltered = [];
+                    if (workout.equipment.includes(equipment)) {
+                        workoutsFiltered.push(workout);
+                    }
+                    return workoutsFiltered;
+                }).filter(workout => workout.length > 0)
+
+            }
+
+            if (length) {
+                let offset = Number(length)
+
+                workouts = DB.workouts.slice(0, offset);
+            }
+
+        }
+
+        return workouts;
+
     } catch (error) {
         throw {
             status: 500,
@@ -39,7 +70,7 @@ const saveWorkout = (newWorkout) => {
     try {
         DB.workouts.push(newWorkout);
         saveDataToDatabase(DB);
-        return true;        
+        return true;
     } catch (error) {
         throw {
             status: 500,
@@ -60,15 +91,15 @@ const updateWorkout = (id, changes) => {
     }
 
     // Con el spred operator vamos a reemplazar los nuevos valores que nos ingresen y modificamos el update.
-    const workoutUpdated = { ...DB.workouts[posWorkout], ...changes, ...{updadeAt: new Date().toLocaleString('en-US', {timeZone: 'UTC'})}};
+    const workoutUpdated = { ...DB.workouts[posWorkout], ...changes, ...{ updadeAt: new Date().toLocaleString('en-US', { timeZone: 'UTC' }) } };
 
-    
+
     try {
         // Sobreescribimos el workout actualizado y salvamos los datos
         DB.workouts[posWorkout] = workoutUpdated
         saveDataToDatabase(DB);
         return workoutUpdated;
-        
+
     } catch (error) {
         throw {
             status: 500,
@@ -91,11 +122,11 @@ const deleteWorkout = (id) => {
     try {
         const workoutDeleted = DB.workouts[posWorkout];
         // Eliminamos la workout seleccionada de nuestra base de datos.
-        DB.workouts.splice(posWorkout,1);
+        DB.workouts.splice(posWorkout, 1);
         saveDataToDatabase(DB)
-    
+
         return workoutDeleted;
-    
+
     } catch (error) {
         throw {
             status: 500,

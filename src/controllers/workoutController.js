@@ -1,18 +1,22 @@
 const workoutServices = require('../services/workoutServices')
 
-const getAllWorkouts = (_, res) => {
+const getAllWorkouts = (req, res) => {
 
-    const workouts = workoutServices.getAllWorkouts();
+  const { mode, equipment, length } = req.query;
 
-    try {
-      res.status(200).send({status: 'OK', data: workouts});
-    } catch (error) {
-      res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });
-    }
-}; 
-  
+  // Lo pasamos a modo de objeto esto crearia un { mode: valor}
+  console.log('datos', {mode, equipment});
+  const workouts = workoutServices.getAllWorkouts({mode, equipment, length});
+
+  try {
+    res.status(200).send({ status: 'OK', data: workouts });
+  } catch (error) {
+    res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
 const getOneWorkout = (req, res) => {
-  
+
   const { workoutId } = req.params
 
   if (!workoutId) {
@@ -27,11 +31,11 @@ const getOneWorkout = (req, res) => {
   const workout = workoutServices.getWorkoutById(workoutId);
 
   try {
-    res.status(200).send({status: 'OK', data: workout});
+    res.status(200).send({ status: 'OK', data: workout });
   } catch (error) {
-    res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });  
+    res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });
   }
-  
+
 };
 
 const createNewWorkout = (req, res) => {
@@ -39,15 +43,15 @@ const createNewWorkout = (req, res) => {
 
   // Validaciones de los datos que tiene el body
   if (!body.name || !body.mode || !body.equipment || !body.exercises || !body.trainerTips) {
-      res.status(400).send({status:'FAILED', message: 'Missing fields,One of the following keys is missing or is empty in request body: "name", "mode", "equipment", "exercises", "trainerTips"'});
+    res.status(400).send({ status: 'FAILED', message: 'Missing fields,One of the following keys is missing or is empty in request body: "name", "mode", "equipment", "exercises", "trainerTips"' });
   }
 
   const workout = workoutServices.createNewWorkout(body);
 
   try {
-    res.status(201).send({status: 'OK', data: workout});
-  } catch (error) { 
-    res.status(error?.status || 500).send({'status': 'FAILED', data: {error: error?.message || error}});
+    res.status(201).send({ status: 'OK', data: workout });
+  } catch (error) {
+    res.status(error?.status || 500).send({ 'status': 'FAILED', data: { error: error?.message || error } });
   }
 
 };
@@ -68,12 +72,12 @@ const updateOneWorkout = (req, res) => {
   const workout = workoutServices.updateWorkout(workoutId, body);
 
   try {
-    res.status(201).send({status: 'OK', data: workout});
+    res.status(201).send({ status: 'OK', data: workout });
   } catch (error) {
     res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });
   }
 
-        
+
 };
 
 const deleteOneWorkout = (req, res) => {
@@ -91,7 +95,7 @@ const deleteOneWorkout = (req, res) => {
   const workout = workoutServices.deleteWorkout(workoutId);
 
   try {
-    res.status(201).send({status: 'OK', data: workout});
+    res.status(201).send({ status: 'OK', data: workout });
   } catch (error) {
     res.status(error?.status || 500).send({ status: "FAILED", data: { error: error?.message || error } });
   }

@@ -1,4 +1,4 @@
-const recordRepository = require('../repository/recordRepository');
+const recordRepository = require('../repositories/recordRepository');
 
 const getRecordByIdWorkout = (idWorkout) => {
     try {

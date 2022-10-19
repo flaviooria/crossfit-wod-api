@@ -1,7 +1,7 @@
 {
   "name": "crossfit-wod-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Api creada con node y express aplicando arquitectura de 3 capas",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/index.js",
@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Flavio Oria",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "2.0.20"

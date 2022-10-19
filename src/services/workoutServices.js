@@ -1,10 +1,10 @@
 //Nuestros servicios servirán como intermediario entre la base de datos y los controlodares que recibiran la petición del usuario.
-const Workout = require('../repository/workoutRepository');
+const Workout = require('../repositories/workoutRepository');
 const crypto = require('crypto');
 
-const getAllWorkouts = () => {
+const getAllWorkouts = (filterParams) => {
     try {
-        const workouts = Workout.getWorkouts();
+        const workouts = Workout.getWorkouts(filterParams);
         return workouts;
     } catch (error) {
         throw error;
