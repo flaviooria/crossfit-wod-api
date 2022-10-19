@@ -1,26 +1,11 @@
+const recordRepository = require('../repository/recordRepository');
 
-const getAllRecords = () => {
-    return;
+const getRecordByIdWorkout = (idWorkout) => {
+    try {
+        return recordRepository.getRecordByIdWorkout(idWorkout);
+    } catch (error) {
+        throw error;
+    }
 };
 
-
-const getRecordById = () => {
-    return;
-};
-
-
-const createRecord = () => {
-    return;
-};
-
-
-const updateRercord = () => {
-    return;
-};
-
-
-const deleteRecord = () => {
-    return;
-};
-
-module.exports = { getAllRecords, getRecordById, createRecord, updateRercord, deleteRecord };
+module.exports = { getRecordByIdWorkout };

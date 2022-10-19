@@ -1,7 +1,5 @@
 const express = require('express');
 const workouts = require('./workoutRoutes');
-// Importar nuestra nueva ruta record
-const records = require('./recordRoutes');
 
 
 function initRoutes(app) {
@@ -9,7 +7,6 @@ function initRoutes(app) {
     const routerController = express.Router()
     // Añado nuestras rutas a usar
     routerController.use('/workouts',workouts);
-    routerController.use('/records',records);
     // Establesco la ruta
     app.use('/api/v1', routerController)
 }
