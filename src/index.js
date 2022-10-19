@@ -16,5 +16,5 @@ initRoutes(app);
 
 
 app.listen(PORT,() => {
-    console.log(`Puerto escuchando en el puerto: ${PORT}`);
+    console.log(`Servidor escuchando en el puerto: ${PORT}`);
 }) 
